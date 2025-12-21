@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسک‌مستر فوق حرفه‌ای علی</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --success: #4ade80;
+            --danger: #ff4757;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background: #0f172a no-repeat center center fixed;
+            background-size: cover !important;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); z-index: -1;
+        }
+
+        .container {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%; max-width: 400px;
+            padding: 30px; border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            color: white; z-index: 1;
+        }
+
+        .info-bar { text-align: center; margin-bottom: 20px; }
+        #digital-clock { font-size: 2.5rem; font-weight: 800; display: block; }
+        #date-persian { color: var(--primary); font-weight: bold; }
+
+        .input-box { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        input {
+            padding: 14px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1); color: white; outline: none;
+        }
+
+        button#add-btn {
+            padding: 14px; border-radius: 15px; border: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; font-weight: bold; cursor: pointer;
+        }
+
+        ul { list-style: none; padding: 0; max-height: 220px; overflow-y: auto; scrollbar-width: none; }
+        li {
+            background: rgba(255, 255, 255, 0.08); margin-bottom: 10px;
+            padding: 15px; border-radius: 20px; display: flex;
+            justify-content: space-between; align-items: center; border-right: 5px solid var(--primary);
+        }
+        .completed { opacity: 0.3; text-decoration: line-through; border-right-color: var(--success); }
+
+        /* دکمه‌های کنترل */
+        .controls { position: fixed; bottom: 25px; right: 25px; display: flex; gap: 12px; z-index: 100; }
+        .icon-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.2); color: white; font-size: 24px;
+            cursor: pointer; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center;
+        }
+
+        /* پنل تنظیمات جدید با اسکرول */
+        .settings-panel {
+            position: fixed; bottom: 85px; right: -350px;
+            width: 290px; background: white; padding: 20px; border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); transition: 0.5s;
+            z-index: 99; color: #333; max-height: 75vh; overflow-y: auto;
+        }
+        .settings-panel.active { right: 25px; }
+        .settings-panel::-webkit-scrollbar { width: 5px; }
+        .settings-panel::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
+
+        .section-title { font-size: 14px; font-weight: bold; margin: 15px 0 10px; color: #555; border-right: 3px solid var(--primary); padding-right: 8px; }
+        
+        .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .bg-thumb { height: 55px; border-radius: 10px; cursor: pointer; background-size: cover; border: 2px solid transparent; transition: 0.2s; }
+        .bg-thumb:hover { transform: scale(1.1); border-color: var(--primary); }
+
+        .color-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .color-btn { height: 40px; border: none; border-radius: 10px; cursor: pointer; color: white; font-size: 11px; font-weight: bold; }
+
+        /* پنل نمودار */
+        .chart-panel {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+            width: 90%; max-width: 500px; background: white;
+            padding: 25px; border-radius: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            z-index: 1000; color: #333; display: none; opacity: 0; transition: 0.4s;
+        }
+        .chart-panel.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button class="icon-btn" onclick="toggleChart()">📈</button>
+    <button class="icon-btn" onclick="toggleSettings()">⚙️</button>
+</div>
+
+<div class="settings-panel" id="settingsPanel">
+    <h3 style="margin:0; text-align:center; font-size:18px;">ظاهر سایت علی</h3>
+    
+    <div class="section-title">لینک دلخواه</div>
+    <input type="text" id="bgUrlInput" placeholder="آدرس عکس را اینجا بزن..." style="width:90%; color:black; border:1px solid #ddd; padding:10px; border-radius:12px;">
+    <button onclick="setCustomBg()" style="width:100%; margin-top:8px; padding:10px; background:#222; color:white; border:none; border-radius:12px; cursor:pointer;">تایید لینک</button>
+
+    <div class="section-title">طبیعت و منظره</div>
+    <div class="bg-grid">
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=2070\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2071\')')"></div>
+    </div>
+
+    <div class="section-title">تکنولوژی و فضا</div>
+    <div class="bg-grid">
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070\')')"></div>
+    </div>
+
+    <div class="section-title">معماری و شهر</div>
+    <div class="bg-grid">
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1449156001437-3a1621acda2e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1449156001437-3a1621acda2e?q=80&w=2070\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2044\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070\')')"></div>
+    </div>
+
+    <div class="section-title">تم‌های رنگی</div>
+    <div class="color-grid">
+        <button class="color-btn" style="background:linear-gradient(135deg, #1e3a8a, #1e40af)" onclick="changeBg('linear-gradient(135deg, #1e3a8a, #1e40af)')">آبی شب</button>
+        <button class="color-btn" style="background:linear-gradient(135deg, #064e3b, #065f46)" onclick="changeBg('linear-gradient(135deg, #064e3b, #065f46)')">سبز یشمی</button>
+        <button class="color-btn" style="background:linear-gradient(135deg, #701a75, #86198f)" onclick="changeBg('linear-gradient(135deg, #701a75, #86198f)')">بنفش عمیق</button>
+        <button class="color-btn" style="background:linear-gradient(135deg, #451a03, #78350f)" onclick="changeBg('linear-gradient(135deg, #451a03, #78350f)')">قهوه‌ای چوب</button>
+    </div>
+
+    <button onclick="toggleSettings()" style="width:100%; margin-top:20px; padding:12px; background:#f0f0f0; border:none; border-radius:15px; cursor:pointer; font-weight:bold;">بستن پنل</button>
+</div>
+
+<div class="chart-panel" id="chartPanel">
+    <h3 style="margin-top:0; text-align: center;">روند عملکرد علی</h3>
+    <canvas id="performanceChart"></canvas>
+    <button onclick="toggleChart()" style="margin-top:20px; width:100%; padding:12px; border-radius:15px; border:none; background:#333; color:white; cursor:pointer; font-weight:bold;">بستن</button>
+</div>
+
+<div class="container" id="mainContainer">
+    <div class="info-bar">
+        <span id="digital-clock">00:00:00</span>
+        <span id="date-persian">...</span>
+    </div>
+    <div class="input-box">
+        <input type="text" id="taskInput" placeholder="تسک امروز علی... ✨">
+        <input type="time" id="timeInput">
+        <button id="add-btn">افزودن</button>
+    </div>
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+    let myChart = null;
+
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('digital-clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
+        const days = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
+        let pDate = now.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+        document.getElementById('date-persian').innerText = days[now.getDay()] + " ، " + pDate;
+    }
+    setInterval(updateDateTime, 1000); updateDateTime();
+
+    function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
+    function toggleChart() {
+        const panel = document.getElementById('chartPanel');
+        panel.classList.toggle('active');
+        if(panel.classList.contains('active')) renderChart();
+        document.getElementById('mainContainer').style.filter = panel.classList.contains('active') ? "blur(15px)" : "none";
+    }
+
+    function syncHistory() {
+        const tasks = JSON.parse(localStorage.getItem('ali_final_tasks') || '[]');
+        let score = 0;
+        tasks.forEach(t => score += t.completed ? 10 : -5);
+        let finalPercent = Math.max(0, Math.min(100, 50 + score));
+        let history = JSON.parse(localStorage.getItem('ali_final_history') || '{}');
+        history[new Date().toLocaleDateString('fa-IR')] = finalPercent;
+        localStorage.setItem('ali_final_history', JSON.stringify(history));
+    }
+
+    function renderChart() {
+        syncHistory();
+        const history = JSON.parse(localStorage.getItem('ali_final_history') || '{}');
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        if (myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(history),
+                datasets: [{ data: Object.values(history), borderColor: '#00d2ff', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 210, 255, 0.1)' }]
+            },
+            options: { scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
+        });
+    }
+
+    function changeBg(style) {
+        document.body.style.background = style.includes('url') ? `${style} center/cover no-repeat fixed` : style;
+        localStorage.setItem('ali_final_bg', style);
+    }
+    function setCustomBg() { const url = document.getElementById('bgUrlInput').value; if(url) changeBg(`url('${url}')`); }
+
+    const taskInput = document.getElementById('taskInput');
+    const timeInput = document.getElementById('timeInput');
+    const taskList = document.getElementById('taskList');
+
+    window.onload = () => {
+        const savedBg = localStorage.getItem('ali_final_bg'); if(savedBg) changeBg(savedBg);
+        const tasks = JSON.parse(localStorage.getItem('ali_final_tasks') || '[]');
+        tasks.forEach(createTaskElement);
+    };
+
+    document.getElementById('add-btn').addEventListener('click', () => {
+        if (!taskInput.value.trim()) return;
+        const task = { text: taskInput.value, time: timeInput.value || "--:--", completed: false, id: Date.now() };
+        createTaskElement(task);
+        saveLocal(task); syncHistory();
+        taskInput.value = ''; timeInput.value = '';
+    });
+
+    function createTaskElement(task) {
+        const li = document.createElement('li');
+        if (task.completed) li.classList.add('completed');
+        li.innerHTML = `
+            <div class="task-text" onclick="toggleTask(${task.id}, this)">
+                <div style="font-weight:bold;">${task.text}</div>
+                <div style="font-size:0.8rem; color:var(--primary);">⏰ ${task.time}</div>
+            </div>
+            <button onclick="deleteTask(${task.id}, this)" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:10px; cursor:pointer;">حذف</button>
+        `;
+        taskList.appendChild(li);
+    }
+
+    function saveLocal(t) {
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks') || '[]');
+        tasks.push(t);
+        localStorage.setItem('ali_final_tasks', JSON.stringify(tasks));
+    }
+
+    function toggleTask(id, el) {
+        el.parentElement.classList.toggle('completed');
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks'));
+        tasks.forEach(t => { if(t.id === id) t.completed = !t.completed; });
+        localStorage.setItem('ali_final_tasks', JSON.stringify(tasks));
+        syncHistory();
+    }
+
+    function deleteTask(id, el) {
+        el.parentElement.remove();
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks'));
+        tasks = tasks.filter(t => t.id !== id);
+        localStorage.setItem('ali_final_tasks', JSON.stringify(tasks));
+        syncHistory();
+    }
+</script>
+</body>
+</html>
