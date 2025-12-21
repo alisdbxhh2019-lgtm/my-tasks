@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داشبورد تسک‌مستر علی 🐼</title>
+    <title>داشبورد پاندایی علی 🐼</title>
     <link rel="icon" href="https://img.icons8.com/plasticine/100/panda.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -12,7 +12,7 @@
             --secondary: #3a7bd5;
             --success: #4ade80;
             --danger: #ff4757;
-            --glass: rgba(15, 23, 42, 0.75);
+            --glass: rgba(15, 23, 42, 0.8);
         }
 
         body {
@@ -29,159 +29,139 @@
             background: rgba(0, 0, 0, 0.3); z-index: -1;
         }
 
-        /* چیدمان اصلی دو بخشی */
         .main-wrapper {
-            display: flex;
-            gap: 20px;
-            width: 95%;
-            max-width: 1100px;
-            padding: 20px;
-            flex-wrap: wrap; /* برای سازگاری با موبایل */
-            justify-content: center;
+            display: flex; gap: 20px; width: 95%; max-width: 1150px;
+            padding: 20px; flex-wrap: wrap; justify-content: center;
         }
 
-        /* منوی سمت چپ (کوچک‌تر - کنترل) */
+        /* پنل سمت چپ - کوچک */
         .side-panel {
-            flex: 1;
-            min-width: 300px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 35px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            height: fit-content;
+            flex: 1; min-width: 300px; background: var(--glass);
+            backdrop-filter: blur(25px); border-radius: 40px;
+            padding: 30px; border: 1px solid rgba(255,255,255,0.1);
+            color: white; height: fit-content;
         }
 
-        /* منوی سمت راست (بزرگ‌تر - لیست تسک‌ها) */
+        /* پنل سمت راست - بزرگ */
         .content-panel {
-            flex: 2;
-            min-width: 350px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 35px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            min-height: 450px;
+            flex: 2.2; min-width: 350px; background: var(--glass);
+            backdrop-filter: blur(25px); border-radius: 40px;
+            padding: 30px; border: 1px solid rgba(255,255,255,0.1);
+            color: white; min-height: 500px;
         }
 
-        /* استایل ساعت و تاریخ */
-        .info-bar { text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        #digital-clock { font-size: 2.8rem; font-weight: 800; display: block; color: white; }
-        #date-persian { color: var(--primary); font-weight: bold; font-size: 1rem; }
-
-        /* باکس ورودی */
-        .input-box { display: flex; flex-direction: column; gap: 12px; }
+        /* استایل‌های ساعت و ورودی */
+        #digital-clock { font-size: 3rem; font-weight: 800; display: block; text-align: center; }
+        #date-persian { color: var(--primary); display: block; text-align: center; margin-bottom: 20px; font-weight: bold; }
+        
+        .input-box { display: flex; flex-direction: column; gap: 15px; }
         input {
             padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.1); color: white; outline: none; font-family: inherit;
+            background: rgba(255,255,255,0.1); color: white; outline: none;
         }
         button#add-btn {
             padding: 15px; border-radius: 18px; border: none;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        button#add-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0,210,255,0.3); }
 
         /* لیست تسک‌ها */
-        h2.panel-title { margin-top: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
         li {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 18px; border-radius: 22px; display: flex;
-            justify-content: space-between; align-items: center; border-right: 6px solid var(--primary);
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 25px;
+            display: flex; justify-content: space-between; align-items: center; border-right: 6px solid var(--primary);
         }
-        .completed { opacity: 0.4; text-decoration: line-through; border-right-color: var(--success); }
+        .completed { opacity: 0.3; text-decoration: line-through; border-right-color: var(--success); }
 
-        /* دکمه‌های شناور تنظیمات و نمودار */
-        .controls { position: fixed; bottom: 25px; left: 25px; display: flex; gap: 12px; z-index: 100; }
+        /* دکمه‌های کنترل ثابت */
+        .controls { position: fixed; bottom: 30px; right: 30px; display: flex; gap: 15px; z-index: 1000; }
         .icon-btn {
-            width: 50px; height: 50px; border-radius: 50%; border: none;
-            background: rgba(255,255,255,0.2); color: white; font-size: 24px;
-            cursor: pointer; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; transition: 0.3s;
+            width: 55px; height: 55px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.25); color: white; font-size: 26px;
+            cursor: pointer; backdrop-filter: blur(15px); display: flex; justify-content: center; align-items: center; transition: 0.3s;
         }
-        .icon-btn:hover { background: var(--primary); transform: rotate(15deg); }
 
-        /* استایل پنل‌های پاپ‌آپ */
-        .popup-panel {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
-            width: 90%; max-width: 450px; background: white;
-            padding: 25px; border-radius: 35px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            z-index: 1000; color: #333; display: none; opacity: 0; transition: 0.3s;
-        }
-        .popup-panel.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        
+        /* پنل تنظیمات زیبای قبلی (بازگشت به حالت اول) */
         .settings-panel {
-            position: fixed; bottom: 85px; left: 25px;
-            width: 280px; background: white; padding: 20px; border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); transition: 0.4s; z-index: 99; color: #333;
-            max-height: 60vh; overflow-y: auto; display: none;
+            position: fixed; bottom: 100px; right: -350px;
+            width: 290px; background: white; padding: 25px; border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); transition: 0.5s;
+            z-index: 999; color: #333; max-height: 75vh; overflow-y: auto;
         }
-        .settings-panel.active { display: block; }
-        .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px;}
-        .bg-thumb { height: 50px; border-radius: 10px; cursor: pointer; background-size: cover; border: 2px solid transparent; }
+        .settings-panel.active { right: 30px; }
+        .section-title { font-size: 14px; font-weight: bold; margin: 15px 0 10px; color: #555; border-right: 3px solid var(--primary); padding-right: 8px; }
+        .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .bg-thumb { height: 55px; border-radius: 12px; cursor: pointer; background-size: cover; transition: 0.2s; border: 2px solid transparent; }
+        .bg-thumb:hover { transform: scale(1.1); border-color: var(--primary); }
 
-        @media (max-width: 800px) {
+        /* پنل نمودار */
+        .chart-panel {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+            width: 90%; max-width: 500px; background: white; padding: 30px; border-radius: 40px;
+            z-index: 2000; color: #333; display: none; opacity: 0; transition: 0.4s;
+        }
+        .chart-panel.active { display: block; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+        @media (max-width: 900px) {
             .main-wrapper { flex-direction: column; }
             .side-panel, .content-panel { width: 100%; min-width: unset; }
-            ul { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
 <div class="controls">
-    <button class="icon-btn" onclick="toggleSettings()" title="تنظیمات">⚙️</button>
-    <button class="icon-btn" onclick="toggleChart()" title="نمودار عملکرد">📈</button>
+    <button class="icon-btn" onclick="toggleChart()">📈</button>
+    <button class="icon-btn" onclick="toggleSettings()">⚙️</button>
+</div>
+
+<div class="settings-panel" id="settingsPanel">
+    <h3 style="margin:0; text-align:center;">ظاهر سایت علی 🎨</h3>
+    <div class="section-title">لینک دلخواه</div>
+    <input type="text" id="bgUrlInput" placeholder="https://..." style="width:90%; color:black; border:1px solid #ddd; padding:10px; border-radius:12px; margin-bottom:5px;">
+    <button onclick="setCustomBg()" style="width:100%; padding:10px; background:#222; color:white; border:none; border-radius:12px; cursor:pointer;">اعمال عکس</button>
+
+    <div class="section-title">طبیعت و فضا</div>
+    <div class="bg-grid">
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072\')')"></div>
+        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071\')')"></div>
+    </div>
+
+    <div class="section-title">تم‌های رنگی</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <button onclick="changeBg('linear-gradient(135deg, #1e3a8a, #1e40af)')" style="background:#1e40af; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:11px;">آبی شب</button>
+        <button onclick="changeBg('linear-gradient(135deg, #0f172a, #1e293b)')" style="background:#0f172a; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:11px;">تیره کلاسیک</button>
+    </div>
+    <button onclick="toggleSettings()" style="width:100%; margin-top:20px; padding:12px; background:#eee; border:none; border-radius:15px; cursor:pointer; font-weight:bold;">بستن پنل</button>
+</div>
+
+<div class="chart-panel" id="chartPanel">
+    <h3 style="text-align:center">تحلیل عملکرد 🐼</h3>
+    <canvas id="performanceChart"></canvas>
+    <button onclick="toggleChart()" style="width:100%; margin-top:15px; padding:12px; border:none; border-radius:15px; background:#333; color:white; cursor:pointer;">بازگشت</button>
 </div>
 
 <div class="main-wrapper" id="mainWrapper">
     <div class="side-panel">
-        <div class="info-bar">
-            <span id="digital-clock">00:00:00</span>
-            <span id="date-persian">...</span>
-        </div>
-        
+        <span id="digital-clock">00:00:00</span>
+        <span id="date-persian">...</span>
         <div class="input-box">
-            <label style="font-weight: bold; font-size: 0.9rem;">➕ افزودن تسک جدید</label>
+            <label style="font-weight:bold; font-size:14px;">➕ تسک جدید:</label>
             <input type="text" id="taskInput" placeholder="چه کاری داری علی؟">
             <input type="time" id="timeInput">
-            <button id="add-btn">ثبت در لیست</button>
+            <button id="add-btn">افزودن به لیست</button>
         </div>
     </div>
 
     <div class="content-panel">
-        <h2 class="panel-title">📋 لیست کارهای امروز</h2>
+        <h2 style="margin-top:0;">📋 لیست کارهای امروز علی</h2>
         <ul id="taskList"></ul>
     </div>
 </div>
 
-<div class="popup-panel" id="chartPanel">
-    <h3 style="text-align:center">تحلیل عملکرد شما 🐼</h3>
-    <canvas id="performanceChart"></canvas>
-    <button onclick="toggleChart()" style="width:100%; margin-top:15px; padding:10px; border:none; border-radius:12px; background:#333; color:white; cursor:pointer;">بستن</button>
-</div>
-
-<div class="settings-panel" id="settingsPanel">
-    <h4 style="margin:0">🎨 ظاهر داشبورد</h4>
-    <p style="font-size: 11px;">پس‌زمینه را تغییر دهید:</p>
-    <div class="bg-grid">
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070\')')"></div>
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072\')')"></div>
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=100')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071\')')"></div>
-    </div>
-    <button onclick="changeBg('linear-gradient(135deg, #0f172a 0%, #1e293b 100%)')" style="width:100%; margin-top:10px; font-size:11px; padding:5px; cursor:pointer;">حذف عکس (تم ساده)</button>
-    <button onclick="toggleSettings()" style="width:100%; margin-top:15px; padding:8px; border-radius:10px; border:none; background:#eee; cursor:pointer;">بستن</button>
-</div>
-
 <script>
     let myChart = null;
-
     function updateDateTime() {
         const now = new Date();
         document.getElementById('digital-clock').innerText = now.toLocaleTimeString('en-US', { hour12: false });
@@ -191,11 +171,7 @@
     }
     setInterval(updateDateTime, 1000); updateDateTime();
 
-    function toggleSettings() { 
-        const s = document.getElementById('settingsPanel');
-        s.style.display = (s.style.display === 'block') ? 'none' : 'block';
-    }
-
+    function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
     function toggleChart() {
         const panel = document.getElementById('chartPanel');
         panel.classList.toggle('active');
@@ -204,50 +180,46 @@
     }
 
     function syncHistory() {
-        const tasks = JSON.parse(localStorage.getItem('ali_dash_tasks') || '[]');
-        let score = 0;
-        tasks.forEach(t => score += t.completed ? 10 : -5);
+        const tasks = JSON.parse(localStorage.getItem('ali_final_tasks_v2') || '[]');
+        let score = 0; tasks.forEach(t => score += t.completed ? 10 : -5);
         let finalPercent = Math.max(0, Math.min(100, 50 + score));
-        let history = JSON.parse(localStorage.getItem('ali_dash_history') || '{}');
+        let history = JSON.parse(localStorage.getItem('ali_final_history_v2') || '{}');
         history[new Date().toLocaleDateString('fa-IR')] = finalPercent;
-        localStorage.setItem('ali_dash_history', JSON.stringify(history));
+        localStorage.setItem('ali_final_history_v2', JSON.stringify(history));
     }
 
     function renderChart() {
         syncHistory();
-        const history = JSON.parse(localStorage.getItem('ali_dash_history') || '{}');
+        const history = JSON.parse(localStorage.getItem('ali_final_history_v2') || '{}');
         const ctx = document.getElementById('performanceChart').getContext('2d');
         if (myChart) myChart.destroy();
         myChart = new Chart(ctx, {
             type: 'line',
-            data: {
-                labels: Object.keys(history),
-                datasets: [{ data: Object.values(history), borderColor: '#00d2ff', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 210, 255, 0.1)' }]
-            },
+            data: { labels: Object.keys(history), datasets: [{ data: Object.values(history), borderColor: '#00d2ff', tension: 0.4, fill: true, backgroundColor: 'rgba(0, 210, 255, 0.1)' }] },
             options: { scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
         });
     }
 
     function changeBg(style) {
         document.body.style.background = style.includes('url') ? `${style} center/cover no-repeat fixed` : style;
-        localStorage.setItem('ali_dash_bg', style);
+        localStorage.setItem('ali_final_bg_v2', style);
     }
+    function setCustomBg() { const url = document.getElementById('bgUrlInput').value; if(url) changeBg(`url('${url}')`); }
 
     const taskInput = document.getElementById('taskInput');
     const timeInput = document.getElementById('timeInput');
     const taskList = document.getElementById('taskList');
 
     window.onload = () => {
-        const savedBg = localStorage.getItem('ali_dash_bg'); if(savedBg) changeBg(savedBg);
-        const tasks = JSON.parse(localStorage.getItem('ali_dash_tasks') || '[]');
+        const savedBg = localStorage.getItem('ali_final_bg_v2'); if(savedBg) changeBg(savedBg);
+        const tasks = JSON.parse(localStorage.getItem('ali_final_tasks_v2') || '[]');
         tasks.forEach(createTaskElement);
     };
 
     document.getElementById('add-btn').addEventListener('click', () => {
         if (!taskInput.value.trim()) return;
         const task = { text: taskInput.value, time: timeInput.value || "--:--", completed: false, id: Date.now() };
-        createTaskElement(task);
-        saveLocal(task); syncHistory();
+        createTaskElement(task); saveLocal(task); syncHistory();
         taskInput.value = ''; timeInput.value = '';
     });
 
@@ -255,7 +227,7 @@
         const li = document.createElement('li');
         if (task.completed) li.classList.add('completed');
         li.innerHTML = `
-            <div style="cursor:pointer" onclick="toggleTask(${task.id}, this)">
+            <div onclick="toggleTask(${task.id}, this)" style="cursor:pointer">
                 <div style="font-weight:bold;">${task.text}</div>
                 <div style="font-size:0.8rem; color:var(--primary);">⏰ ${task.time}</div>
             </div>
@@ -265,25 +237,23 @@
     }
 
     function saveLocal(t) {
-        let tasks = JSON.parse(localStorage.getItem('ali_dash_tasks') || '[]');
-        tasks.push(t);
-        localStorage.setItem('ali_dash_tasks', JSON.stringify(tasks));
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks_v2') || '[]');
+        tasks.push(t); localStorage.setItem('ali_final_tasks_v2', JSON.stringify(tasks));
     }
 
     function toggleTask(id, el) {
-        const parent = el.closest('li');
-        parent.classList.toggle('completed');
-        let tasks = JSON.parse(localStorage.getItem('ali_dash_tasks'));
+        el.parentElement.classList.toggle('completed');
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks_v2'));
         tasks.forEach(t => { if(t.id === id) t.completed = !t.completed; });
-        localStorage.setItem('ali_dash_tasks', JSON.stringify(tasks));
+        localStorage.setItem('ali_final_tasks_v2', JSON.stringify(tasks));
         syncHistory();
     }
 
     function deleteTask(id, el) {
-        el.closest('li').remove();
-        let tasks = JSON.parse(localStorage.getItem('ali_dash_tasks'));
+        el.parentElement.remove();
+        let tasks = JSON.parse(localStorage.getItem('ali_final_tasks_v2'));
         tasks = tasks.filter(t => t.id !== id);
-        localStorage.setItem('ali_dash_tasks', JSON.stringify(tasks));
+        localStorage.setItem('ali_final_tasks_v2', JSON.stringify(tasks));
         syncHistory();
     }
 </script>
