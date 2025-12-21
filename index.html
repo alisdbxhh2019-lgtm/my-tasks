@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسک‌مستر فوق حرفه‌ای علی</title>
+    <title>تسک‌مستر پاندایی علی</title>
+    
+    <link rel="icon" href="https://img.icons8.com/plasticine/100/panda.png" type="image/png">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -62,7 +65,6 @@
         }
         .completed { opacity: 0.3; text-decoration: line-through; border-right-color: var(--success); }
 
-        /* دکمه‌های کنترل */
         .controls { position: fixed; bottom: 25px; right: 25px; display: flex; gap: 12px; z-index: 100; }
         .icon-btn {
             width: 50px; height: 50px; border-radius: 50%; border: none;
@@ -70,7 +72,6 @@
             cursor: pointer; backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center;
         }
 
-        /* پنل تنظیمات جدید با اسکرول */
         .settings-panel {
             position: fixed; bottom: 85px; right: -350px;
             width: 290px; background: white; padding: 20px; border-radius: 30px;
@@ -78,9 +79,6 @@
             z-index: 99; color: #333; max-height: 75vh; overflow-y: auto;
         }
         .settings-panel.active { right: 25px; }
-        .settings-panel::-webkit-scrollbar { width: 5px; }
-        .settings-panel::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
-
         .section-title { font-size: 14px; font-weight: bold; margin: 15px 0 10px; color: #555; border-right: 3px solid var(--primary); padding-right: 8px; }
         
         .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -90,7 +88,6 @@
         .color-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .color-btn { height: 40px; border: none; border-radius: 10px; cursor: pointer; color: white; font-size: 11px; font-weight: bold; }
 
-        /* پنل نمودار */
         .chart-panel {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
             width: 90%; max-width: 500px; background: white;
@@ -108,46 +105,37 @@
 </div>
 
 <div class="settings-panel" id="settingsPanel">
-    <h3 style="margin:0; text-align:center; font-size:18px;">ظاهر سایت علی</h3>
+    <h3 style="margin:0; text-align:center; font-size:18px;">تنظیمات پاندایی 🐼</h3>
     
     <div class="section-title">لینک دلخواه</div>
-    <input type="text" id="bgUrlInput" placeholder="آدرس عکس را اینجا بزن..." style="width:90%; color:black; border:1px solid #ddd; padding:10px; border-radius:12px;">
-    <button onclick="setCustomBg()" style="width:100%; margin-top:8px; padding:10px; background:#222; color:white; border:none; border-radius:12px; cursor:pointer;">تایید لینک</button>
+    <input type="text" id="bgUrlInput" placeholder="آدرس عکس..." style="width:90%; color:black; border:1px solid #ddd; padding:10px; border-radius:12px;">
+    <button onclick="setCustomBg()" style="width:100%; margin-top:8px; padding:10px; background:#222; color:white; border:none; border-radius:12px; cursor:pointer;">تایید</button>
 
-    <div class="section-title">طبیعت و منظره</div>
+    <div class="section-title">طبیعت</div>
     <div class="bg-grid">
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070\')')"></div>
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=2070\')')"></div>
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2071\')')"></div>
     </div>
 
-    <div class="section-title">تکنولوژی و فضا</div>
+    <div class="section-title">تکنولوژی</div>
     <div class="bg-grid">
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072\')')"></div>
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070\')')"></div>
         <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070\')')"></div>
     </div>
 
-    <div class="section-title">معماری و شهر</div>
-    <div class="bg-grid">
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1449156001437-3a1621acda2e?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1449156001437-3a1621acda2e?q=80&w=2070\')')"></div>
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2044\')')"></div>
-        <div class="bg-thumb" style="background-image:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=150')" onclick="changeBg('url(\'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070\')')"></div>
-    </div>
-
     <div class="section-title">تم‌های رنگی</div>
     <div class="color-grid">
         <button class="color-btn" style="background:linear-gradient(135deg, #1e3a8a, #1e40af)" onclick="changeBg('linear-gradient(135deg, #1e3a8a, #1e40af)')">آبی شب</button>
-        <button class="color-btn" style="background:linear-gradient(135deg, #064e3b, #065f46)" onclick="changeBg('linear-gradient(135deg, #064e3b, #065f46)')">سبز یشمی</button>
-        <button class="color-btn" style="background:linear-gradient(135deg, #701a75, #86198f)" onclick="changeBg('linear-gradient(135deg, #701a75, #86198f)')">بنفش عمیق</button>
-        <button class="color-btn" style="background:linear-gradient(135deg, #451a03, #78350f)" onclick="changeBg('linear-gradient(135deg, #451a03, #78350f)')">قهوه‌ای چوب</button>
+        <button class="color-btn" style="background:linear-gradient(135deg, #701a75, #86198f)" onclick="changeBg('linear-gradient(135deg, #701a75, #86198f)')">بنفش</button>
     </div>
 
-    <button onclick="toggleSettings()" style="width:100%; margin-top:20px; padding:12px; background:#f0f0f0; border:none; border-radius:15px; cursor:pointer; font-weight:bold;">بستن پنل</button>
+    <button onclick="toggleSettings()" style="width:100%; margin-top:20px; padding:12px; background:#f0f0f0; border:none; border-radius:15px; cursor:pointer; font-weight:bold;">بستن</button>
 </div>
 
 <div class="chart-panel" id="chartPanel">
-    <h3 style="margin-top:0; text-align: center;">روند عملکرد علی</h3>
+    <h3 style="margin:0; text-align: center;">روند عملکرد علی 🐼</h3>
     <canvas id="performanceChart"></canvas>
     <button onclick="toggleChart()" style="margin-top:20px; width:100%; padding:12px; border-radius:15px; border:none; background:#333; color:white; cursor:pointer; font-weight:bold;">بستن</button>
 </div>
@@ -160,7 +148,7 @@
     <div class="input-box">
         <input type="text" id="taskInput" placeholder="تسک امروز علی... ✨">
         <input type="time" id="timeInput">
-        <button id="add-btn">افزودن</button>
+        <button id="add-btn">افزودن تسک</button>
     </div>
     <ul id="taskList"></ul>
 </div>
